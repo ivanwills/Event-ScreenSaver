@@ -6,7 +6,6 @@ WriteMakefile
           'INSTALLDIRS' => 'site',
           'NAME' => 'Event::ScreenSaver',
           'EXE_FILES' => [
-                           'bin/.player-pause.swp',
                            'bin/player-pause'
                          ],
           'VERSION_FROM' => 'lib/Event/ScreenSaver.pm',
