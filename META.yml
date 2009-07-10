@@ -15,6 +15,9 @@ provides:
   Event::ScreenSaver:
     file: lib/Event/ScreenSaver.pm
     version: 0.0.1
+  Event::ScreenSaver::Unix:
+    file: lib/Event/ScreenSaver/Unix.pm
+    version: 0.0.1
 generated_by: Module::Build version 0.33
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
