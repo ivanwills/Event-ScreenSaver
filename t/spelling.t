@@ -8,5 +8,9 @@ eval { require Test::Spelling; Test::Spelling->import() };
 
 plan skip_all => "Test::Spelling required for testing POD coverage" if $@;
 
-add_stopwords(qw//);
+add_stopwords(qw/
+	Hornsby
+	NSW
+	Param
+/);
 all_pod_files_spelling_ok();
