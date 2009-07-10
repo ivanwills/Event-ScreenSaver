@@ -1,6 +1,6 @@
 package Event::ScreenSaver;
 
-# Created on: 2009-07-08 05:33:45
+# Created on: 2009-07-10 19:40:40
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -8,73 +8,17 @@ package Event::ScreenSaver;
 
 use Moose;
 use version;
-use Carp;
-use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
 our $VERSION = version->new('0.0.1');
 
-has start => (
-	is  => 'rw',
-	isa => 'Sub',
-);
-has stop => (
-	is  => 'rw',
-	isa => 'Sub',
+my %module = (
+	linux => 'Unix',
 );
 
-sub run {
-	my ($self) = @_;
+my $module = $module{$OSNAME} || $OSNAME;
 
-	eval { require Net::DBus };
-
-	if ($EVAL_ERROR) {
-		eval { require X11::Protocol };
-
-		die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
-
-		require X11::Protocol::Ext::DPMS;
-
-		my $x = X11::Protocol->new();
-		$x->init_extension('DPMS');
-
-		my $power_level = '';
-		while (1) {
-			my $old_pl = $power_level;
-			($power_level, undef) = $x->DPMSInfo();
-			if( $old_pl eq 'DPMSModeOn' && $power_level ne 'DPMSModeOn' ) {
-				$self->start->() if $self->start;
-			}
-			elsif ( $power_level eq 'DPMSModeOn' && $old_pl ne 'DPMSModeOn' ) {
-				$self->stop->() if $self->stop;
-			}
-		}
-	}
-	else {
-		require Net::DBus::Reactor;
-
-		my $bus = Net::DBus->find;
-		my $screensaver = $bus->get_service("org.gnome.ScreenSaver");
-
-		my $screensaver_object = $screensaver->get_object("/org/gnome/ScreenSaver", "org.gnome.ScreenSaver");
-		$screensaver_object->connect_to_signal(
-			'ActiveChanged',
-			sub {
-				my $active = shift;
-				if ($active) {
-					$self->start->() if $self->start;
-				}
-				else {
-					$self->stop->() if $self->stop;
-				}
-			},
-		);
-
-		my $reactor = Net::DBus::Reactor->main();
-		$reactor->run();
-	}
-
-}
+extends "Event::ScreenSaver::$module";
 
 1;
 
@@ -87,57 +31,56 @@ and stopping of the screen saver (Linux only at the moment)
 
 =head1 VERSION
 
-This documentation refers to Event::ScreenSaver version 0.1.
+This documentation refers to Event::ScreenSaver version 0.0.1.
 
 =head1 SYNOPSIS
 
    use Event::ScreenSaver;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
-
    # create the screen saver object
    my $ss = Event::ScreenSaver->new();
 
    # add functions to events
-   $ss->on_start( sub {print "The screen saver started\n" } );
-   $ss->on_stop( sub { print "The screen saver stopped\n" } );
+   $ss->start( sub {print "The screen saver started\n" } );
+   $ss->stop( sub { print "The screen saver stopped\n" } );
 
    # run the event handler
    $ss->run();
 
+   # or more simply
+   Event::ScreenSaver->new(
+       start => sub {say "Screen saver started"},
+       stop  => sub {say "Screen saver stopped"},
+   )->run;
+
 =head1 DESCRIPTION
 
-This library provides an easy way to hook to the starting and stopping of
-the screen saver (currently only in Unix like environments).
+This module will try to load the most appropriate class for monitoring the
+starting and stopping of the screen saver. Currently that means the Unix
+module os it probably wont work that broadly.
 
-The call back functions are passed the current event object.
+=head2 Extending
+
+The recommended method of implementing this for other operating systems is to
+extend L<Event::ScreenSaver::Unix> and over write the run method with an OS
+specific version.
 
 =head1 SUBROUTINES/METHODS
 
+=head2 C<run ()>
+
+Starts the event loop monitoring the screen saver.
+
+Note that this will never return you will need to implement some other
+exit strategy (like Ctrl-C).
+
 =head2 C<start ( [$sub] )>
 
-Param: C<$sub> - sub - The starting call back function
-
-Return: sub - The currently set starting function
-
-Description: Sets/Gets the function that will be called when the screen
-saver is started.
+Gets/Sets the start handler code.
 
 =head2 C<stop ( [$sub] )>
 
-Param: C<$sub> - sub - The stopping call back function
-
-Return: sub - The currently set stopping function
-
-Description: Sets/Gets the function that will be called when the screen
-saver is stopped.
-
-=head2 C<run ()>
-
-This function starts the process for listening for screen saver events.
-It does not return.
+Gets/Sets the stop handler code.
 
 =head1 DIAGNOSTICS
 
@@ -149,11 +92,15 @@ It does not return.
 
 =head1 BUGS AND LIMITATIONS
 
-There are no known bugs in this module.
+This module is currently only tested on a Ubuntu Linux system it will
+probably work on other Desktop Linuxes and may work on other Unix systems
+but will probably not work on other operating systems.
 
 Please report problems to Ivan Wills (ivan.wills@gmail.com).
 
-Patches are welcome.
+Patches are welcome (Particularly for other operating systems).
+
+Code can be found at L<http://github.com/ivanwills/Event-ScreenSaver/tree/master>
 
 =head1 AUTHOR
 

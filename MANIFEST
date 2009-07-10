@@ -5,6 +5,7 @@ MANIFEST.SKIP
 README
 bin/player-pause
 lib/Event/ScreenSaver.pm
+lib/Event/ScreenSaver/Unix.pm
 t/00-load.t
 t/pod-coverage.t
 t/pod.t

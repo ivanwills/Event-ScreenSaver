@@ -12,5 +12,9 @@ add_stopwords(qw/
 	Hornsby
 	NSW
 	Param
+	os
+	Linuxes
+	Ubuntu
+	Ctrl
 /);
 all_pod_files_spelling_ok();
