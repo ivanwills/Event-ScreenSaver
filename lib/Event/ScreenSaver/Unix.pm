@@ -71,9 +71,6 @@ sub _run_dbus {
 	my $screensaver = $bus->get_service("org.gnome.ScreenSaver");
 
 	my $screensaver_object = $screensaver->get_object("/org/gnome/ScreenSaver", "org.gnome.ScreenSaver");
-	my $ins = $screensaver_object->_introspector;
-	my @interfaces = $ins->has_signal('ActiveChanged');
-
 	$screensaver_object->connect_to_signal( 'ActiveChanged', $change );
 
 	$reactor->run();
