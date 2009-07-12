@@ -9,6 +9,7 @@ package Event::ScreenSaver::Unix;
 use Moose;
 use version;
 use Carp;
+use List::MoreUtils qw/any/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
@@ -16,64 +17,98 @@ our $VERSION = version->new('0.0.1');
 
 has start => (
 	is  => 'rw',
-	isa => 'Sub',
+	isa => 'CodeRef',
 );
 has stop => (
 	is  => 'rw',
-	isa => 'Sub',
+	isa => 'CodeRef',
+);
+has type => (
+	is  => 'rw',
 );
 
 sub run {
 	my ($self) = @_;
 
-	eval { require X11::Protocol };
-
-	if ($EVAL_ERROR) {
-		eval { require Net::DBus::Reactor };
-
-		die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
-
-		my $bus = Net::DBus->find;
-		my $screensaver = $bus->get_service("org.gnome.ScreenSaver");
-
-		my $screensaver_object = $screensaver->get_object("/org/gnome/ScreenSaver", "org.gnome.ScreenSaver");
-		$screensaver_object->connect_to_signal(
-			'ActiveChanged',
-			sub {
-				my $active = shift;
-				if ($active) {
-					$self->start->() if $self->start;
-				}
-				else {
-					$self->stop->() if $self->stop;
-				}
-			},
-		);
-
-		my $reactor = Net::DBus::Reactor->main();
-		$reactor->run();
+	if ( !$self->type ) {
+		eval { require X11::Protocol };
+		$self->type( $EVAL_ERROR ? 'DBus' : 'X11' );
 	}
-	else {
-		require X11::Protocol::Ext::DPMS;
 
-		my $x = X11::Protocol->new();
-		$x->init_extension('DPMS');
+	if ( $self->type eq 'X11' ) {
+		$self->_x11();
+	}
+	elsif ( $self->type eq 'DBus' ) {
+		$self->_dbus();
+	}
 
-		my $power_level = '';
-		while (1) {
-			my $old_pl = $power_level;
-			($power_level, undef) = $x->DPMSInfo();
-			if( $old_pl eq 'DPMSModeOn' && $power_level ne 'DPMSModeOn' ) {
-				$self->start->() if $self->start;
-			}
-			elsif ( $power_level eq 'DPMSModeOn' && $old_pl ne 'DPMSModeOn' ) {
-				$self->stop->() if $self->stop;
-			}
+	return;
+}
 
-			sleep 60;
+sub _run_dbus {
+	my ($self) = @_;
+
+	eval { require Net::DBus::Reactor };
+
+	die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
+
+	my $reactor = Net::DBus::Reactor->main();
+	my $change  = sub {
+		my $active = shift;
+		my $stop;
+
+		if ($active) {
+			$stop = $self->start->($self) if $self->start;
 		}
+		else {
+			$stop = $self->stop->($self) if $self->stop;
+		}
+
+		$reactor->shutdown if $stop;
+	};
+
+	my $bus = Net::DBus->find;
+	my $screensaver = $bus->get_service("org.gnome.ScreenSaver");
+
+	my $screensaver_object = $screensaver->get_object("/org/gnome/ScreenSaver", "org.gnome.ScreenSaver");
+	my $ins = $screensaver_object->_introspector;
+	my @interfaces = $ins->has_signal('ActiveChanged');
+
+	$screensaver_object->connect_to_signal( 'ActiveChanged', $change );
+
+	$reactor->run();
+
+	return;
+}
+
+sub _run_x11 {
+	my ($self) = @_;
+
+	eval { require X11::Protocol::Ext::DPMS };
+	die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
+
+	my $x = X11::Protocol->new();
+	$x->init_extension('DPMS');
+
+	my $power_level = '';
+	while (1) {
+		my $old_pl = $power_level;
+		($power_level, undef) = $x->DPMSInfo();
+		my $stop;
+
+		if( $old_pl eq 'DPMSModeOn' && $power_level ne 'DPMSModeOn' ) {
+			$stop = $self->start->($self) if $self->start;
+		}
+		elsif ( $power_level eq 'DPMSModeOn' && $old_pl ne 'DPMSModeOn' ) {
+			$stop = $self->stop->($self) if $self->stop;
+		}
+
+		last if $stop;
+
+		sleep 60;
 	}
 
+	return;
 }
 
 1;
