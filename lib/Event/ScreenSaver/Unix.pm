@@ -177,8 +177,8 @@ It does not return.
 
 =head1 BUGS AND LIMITATIONS
 
-There apears to be an issue with DBus where if the code calling this module
-also uses Net::DBus the Net::DBus::Reactor will not run.
+There appears to be an issue with L<Net::DBus> where if the code calling this module
+also uses Net::DBus the L<Net::DBus::Reactor> will not run.
 
 Please report problems to Ivan Wills (ivan.wills@gmail.com).
 
