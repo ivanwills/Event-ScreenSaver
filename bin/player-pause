@@ -17,6 +17,7 @@ use Event::ScreenSaver;
 
 our $VERSION = version->new('0.0.1');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
+my $ss;
 
 my %option = (
 	player  => $ENV{'PLAYER_PAUSE_PLAYER'},
@@ -57,9 +58,6 @@ sub main {
 	# Load the appropriate library the the chosen player
 	loader($option{'player'});
 
-	# check that we can actually get the appropriate player
-	player();
-
 	my $was_playing = 0;
 
 	# start monitoring the screen saver
@@ -67,49 +65,47 @@ sub main {
 		start => sub {
 			my $player = player();
 
-			return if !$was_playing;
+			return if !($was_playing = is_playing($player));
 
 			$player->can('play') ? $player->play() : $player->playPause(0);
 		},
 		stop => sub {
 			my $player = player();
 
-			if ( !is_playing($player) ) {
-				$was_playing = 0;
-				return;
-			}
+			return if !$was_playing;
 
 			$player->can('pause') ? $player->pause() : $player->playPause(1);
-			$was_playing = 1;
 		}
 	)->run;
 
 	return;
 }
 
-	sub player {
-		if ($option{'player'} eq 'mpd') {
-			warn "Pausing MPD\n" if $option{verbose};
-			$player = eval{ Audio::MPD->new() };
+sub player {
+	my $player;
 
-			if ($EVAL_ERROR) {
-				die "Please start MPD\n";
-			}
-		}
-		elsif ($option{'player'} eq 'amarok') {
-			warn "Pausing Amarok\n" if $option{verbose};
-			$player = DCOP::Amarok::Player->new();
-		}
-		elsif ($option{'player'} eq 'rhythmbox') {
-			warn "Pausing Rhythmbox\n" if $option{verbose};
-			my $bus = Net::DBus->find;
-			my $rhythmbox = $bus->get_service("org.gnome.Rhythmbox");
+	if ($option{'player'} eq 'mpd') {
+		warn "Pausing MPD\n" if $option{verbose};
+		$player = eval{ Audio::MPD->new() };
 
-			$player = $rhythmbox->get_object("/org/gnome/Rhythmbox/Player", "org.gnome.Rhythmbox.Player");
+		if ($EVAL_ERROR) {
+			die "Please start MPD\n";
 		}
-
-		return $player;
 	}
+	elsif ($option{'player'} eq 'amarok') {
+		warn "Pausing Amarok\n" if $option{verbose};
+		$player = DCOP::Amarok::Player->new();
+	}
+	elsif ($option{'player'} eq 'rhythmbox') {
+		warn "Pausing Rhythmbox\n" if $option{verbose};
+		my $bus = Net::DBus->find;
+		my $rhythmbox = $bus->get_service("org.gnome.Rhythmbox");
+
+		$player = $rhythmbox->get_object("/org/gnome/Rhythmbox/Player", "org.gnome.Rhythmbox.Player");
+	}
+
+	return $player;
+}
 
 sub is_playing {
 	my $player = $_[0];
@@ -135,7 +131,8 @@ sub loader {
 
 	my $load   = shift;
 	my $module =
-		  $load eq 'mpd'       ? 'Audio::MPD'
+		  !defined $load       ? die "Nothing to load!\n"
+		: $load eq 'mpd'       ? 'Audio::MPD'
 		: $load eq 'amarok'    ? 'DCOP::Amarok::Player'
 		: $load eq 'rhythmbox' ? 'Net::DBus'
 		:                        die "Unknown player $load!\n";
