@@ -36,10 +36,10 @@ sub run {
 	}
 
 	if ( $self->type eq 'X11' ) {
-		$self->_x11();
+		$self->_run_x11();
 	}
 	elsif ( $self->type eq 'DBus' ) {
-		$self->_dbus();
+		$self->_run_dbus();
 	}
 
 	return;
