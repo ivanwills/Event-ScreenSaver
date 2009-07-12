@@ -96,6 +96,8 @@ This module is currently only tested on a Ubuntu Linux system it will
 probably work on other Desktop Linuxes and may work on other Unix systems
 but will probably not work on other operating systems.
 
+See L<Event::ScreenSaver> for its bugs and limitations.
+
 Please report problems to Ivan Wills (ivan.wills@gmail.com).
 
 Patches are welcome (Particularly for other operating systems).

@@ -129,8 +129,8 @@ This documentation refers to Event::ScreenSaver::Unix version 0.0.1.
    my $ss = Event::ScreenSaver::Unix->new();
 
    # add functions to events
-   $ss->on_start( sub {print "The screen saver started\n" } );
-   $ss->on_stop( sub { print "The screen saver stopped\n" } );
+   $ss->start( sub {print "The screen saver started\n" } );
+   $ss->stop( sub { print "The screen saver stopped\n" } );
 
    # run the event handler
    $ss->run();
@@ -177,7 +177,8 @@ It does not return.
 
 =head1 BUGS AND LIMITATIONS
 
-There are no known bugs in this module.
+There apears to be an issue with DBus where if the code calling this module
+also uses Net::DBus the Net::DBus::Reactor will not run.
 
 Please report problems to Ivan Wills (ivan.wills@gmail.com).
 
