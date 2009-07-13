@@ -4,6 +4,11 @@ use strict;
 use warnings;
 use Test::More;
 
+if ( not $ENV{TEST_AUTHOR} ) {
+    my $msg = 'Author test.  Set TEST_AUTHOR environment variable to a true value to run.';
+    plan( skip_all => $msg );
+}
+
 # check that Test::Spelling is installed
 eval { require Test::Spelling; Test::Spelling->import() };
 
