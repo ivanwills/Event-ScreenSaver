@@ -1,6 +1,6 @@
 ---
 name: Event-ScreenSaver
-version: 0.0.1
+version: 0.0.2
 author:
   - 'Ivan Wills <ivan.wills@gmail.com>'
 abstract: |-
@@ -14,7 +14,7 @@ build_requires:
 provides:
   Event::ScreenSaver:
     file: lib/Event/ScreenSaver.pm
-    version: 0.0.1
+    version: 0.0.2
   Event::ScreenSaver::Unix:
     file: lib/Event/ScreenSaver/Unix.pm
     version: 0.0.1

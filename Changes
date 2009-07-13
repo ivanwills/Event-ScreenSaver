@@ -1,5 +1,10 @@
 Revision history for Event-ScreenSaver
 
+0.0.2   2009-07-13
+        Fixed failing spelling tests.
+        Made Solaris use the Unix module.
+        Stopped spelling and pod-coverage tests from running by default
+
 0.0.1   2009-07-12
         First version, released on an unsuspecting world.
 

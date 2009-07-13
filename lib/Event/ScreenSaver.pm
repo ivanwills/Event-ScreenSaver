@@ -10,7 +10,7 @@ use Moose;
 use version;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.0.1');
+our $VERSION = version->new('0.0.2');
 
 my %module = (
 	linux   => 'Unix',
