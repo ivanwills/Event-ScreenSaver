@@ -13,7 +13,8 @@ use English qw/ -no_match_vars /;
 our $VERSION = version->new('0.0.1');
 
 my %module = (
-	linux => 'Unix',
+	linux   => 'Unix',
+	solaris => 'Unix',
 );
 
 my $module = $module{$OSNAME} || $OSNAME;
