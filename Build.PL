@@ -26,7 +26,7 @@ my $builder = Module::Build->new(
 	create_license     => 1,
 	meta_merge         => {
 		resources => {
-			repository => 'git://github.com/ivanwills/Event-ScreenSaver.git',
+			repository => 'http://github.com/ivanwills/Event-ScreenSaver',
 			bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Event-ScreenSaver',
 		},
 	},
