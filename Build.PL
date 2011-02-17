@@ -20,6 +20,7 @@ my $builder = Module::Build->new(
 	},
 	build_requires => {
 		'Test::More' => 0,
+		'Test::NoWarnings'     => 0,
 	},
 	add_to_cleanup     => [ 'Event-ScreenSaver-*' ],
 	create_makefile_pl => 'traditional',
