@@ -114,8 +114,7 @@ __END__
 
 =head1 NAME
 
-Event::ScreenSaver::Unix - Provides the Unix & Unix like screen saver
-monitoring code.
+Event::ScreenSaver::Unix - Provides the Unix & Unix like screen saver monitoring code.
 
 =head1 VERSION
 

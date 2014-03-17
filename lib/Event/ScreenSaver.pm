@@ -27,8 +27,7 @@ __END__
 
 =head1 NAME
 
-Event::ScreenSaver - Provides the ability to hook functions to the starting
-and stopping of the screen saver (Linux only at the moment)
+Event::ScreenSaver - Provides the ability to hook functions to the starting and stopping of the screen saver (Linux only at the moment)
 
 =head1 VERSION
 
