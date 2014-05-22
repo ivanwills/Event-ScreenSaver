@@ -17,10 +17,10 @@ name: Event-ScreenSaver
 provides:
   Event::ScreenSaver:
     file: lib/Event/ScreenSaver.pm
-    version: v0.0.3
+    version: v0.0.4
   Event::ScreenSaver::Unix:
     file: lib/Event/ScreenSaver/Unix.pm
-    version: v0.0.3
+    version: v0.0.4
 requires:
   List::MoreUtils: 0
   Module::Build: 0
@@ -35,4 +35,4 @@ resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Event-ScreenSaver
   license: http://dev.perl.org/licenses/
   repository: http://github.com/ivanwills/Event-ScreenSaver
-version: v0.0.3
+version: v0.0.4
