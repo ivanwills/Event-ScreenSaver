@@ -7,10 +7,11 @@ package Event::ScreenSaver;
 # $Revision$, $Source$, $Date$
 
 use Moose;
+use warnings;
 use version;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.0.2');
+our $VERSION = version->new('0.0.3');
 
 my %module = (
 	linux   => 'Unix',
@@ -27,11 +28,12 @@ __END__
 
 =head1 NAME
 
-Event::ScreenSaver - Provides the ability to hook functions to the starting and stopping of the screen saver (Linux only at the moment)
+Event::ScreenSaver - Provides the ability to hook functions to the starting
+and stopping of the screen saver (Linux only at the moment)
 
 =head1 VERSION
 
-This documentation refers to Event::ScreenSaver version 0.0.1.
+This documentation refers to Event::ScreenSaver version 0.0.3.
 
 =head1 SYNOPSIS
 

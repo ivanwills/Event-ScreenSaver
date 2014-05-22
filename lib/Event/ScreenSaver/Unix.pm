@@ -7,13 +7,14 @@ package Event::ScreenSaver::Unix;
 # $Revision$, $Source$, $Date$
 
 use Moose;
+use warnings;
 use version;
 use Carp;
 use List::MoreUtils qw/any/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.0.1');
+our $VERSION = version->new('0.0.3');
 
 has start => (
 	is  => 'rw',
@@ -114,11 +115,12 @@ __END__
 
 =head1 NAME
 
-Event::ScreenSaver::Unix - Provides the Unix & Unix like screen saver monitoring code.
+Event::ScreenSaver::Unix - Provides the Unix & Unix like screen saver
+monitoring code.
 
 =head1 VERSION
 
-This documentation refers to Event::ScreenSaver::Unix version 0.0.1.
+This documentation refers to Event::ScreenSaver::Unix version 0.0.3.
 
 =head1 SYNOPSIS
 
