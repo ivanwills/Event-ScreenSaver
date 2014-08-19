@@ -61,3 +61,5 @@ Debian_CPANTS.txt
 
 # Avoid archives of this distribution
 \bEvent-ScreenSaver-[\d\.\_]+
+
+[.].*[.]tag$
