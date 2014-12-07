@@ -17,96 +17,96 @@ use English qw/ -no_match_vars /;
 our $VERSION = version->new('0.0.4');
 
 has start => (
-	is  => 'rw',
-	isa => 'CodeRef',
+    is  => 'rw',
+    isa => 'CodeRef',
 );
 has stop => (
-	is  => 'rw',
-	isa => 'CodeRef',
+    is  => 'rw',
+    isa => 'CodeRef',
 );
 has type => (
-	is  => 'rw',
+    is  => 'rw',
 );
 
 sub run {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	if ( !$self->type ) {
-		eval { require X11::Protocol };
-		$self->type( $EVAL_ERROR ? 'DBus' : 'X11' );
-	}
+    if ( !$self->type ) {
+        eval { require X11::Protocol };
+        $self->type( $EVAL_ERROR ? 'DBus' : 'X11' );
+    }
 
-	if ( $self->type eq 'X11' ) {
-		$self->_run_x11();
-	}
-	elsif ( $self->type eq 'DBus' ) {
-		$self->_run_dbus();
-	}
+    if ( $self->type eq 'X11' ) {
+        $self->_run_x11();
+    }
+    elsif ( $self->type eq 'DBus' ) {
+        $self->_run_dbus();
+    }
 
-	return;
+    return;
 }
 
 sub _run_dbus {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	eval { require Net::DBus::Reactor };
+    eval { require Net::DBus::Reactor };
 
-	die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
+    die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
 
-	my $reactor = Net::DBus::Reactor->main();
-	my $change  = sub {
-		my $active = shift;
-		my $stop;
+    my $reactor = Net::DBus::Reactor->main();
+    my $change  = sub {
+        my $active = shift;
+        my $stop;
 
-		if ($active) {
-			$stop = $self->start->($self) if $self->start;
-		}
-		else {
-			$stop = $self->stop->($self) if $self->stop;
-		}
+        if ($active) {
+            $stop = $self->start->($self) if $self->start;
+        }
+        else {
+            $stop = $self->stop->($self) if $self->stop;
+        }
 
-		$reactor->shutdown if $stop;
-	};
+        $reactor->shutdown if $stop;
+    };
 
-	my $bus = Net::DBus->find;
-	my $screensaver = $bus->get_service("org.gnome.ScreenSaver");
+    my $bus = Net::DBus->find;
+    my $screensaver = $bus->get_service("org.gnome.ScreenSaver");
 
-	my $screensaver_object = $screensaver->get_object("/org/gnome/ScreenSaver", "org.gnome.ScreenSaver");
-	$screensaver_object->connect_to_signal( 'ActiveChanged', $change );
+    my $screensaver_object = $screensaver->get_object("/org/gnome/ScreenSaver", "org.gnome.ScreenSaver");
+    $screensaver_object->connect_to_signal( 'ActiveChanged', $change );
 
-	$reactor->run();
+    $reactor->run();
 
-	return;
+    return;
 }
 
 sub _run_x11 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	eval { require X11::Protocol::Ext::DPMS };
-	die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
+    eval { require X11::Protocol::Ext::DPMS };
+    die "You need to install eather Net::DBus or X11::Protocol\n" if $EVAL_ERROR;
 
-	my $x = X11::Protocol->new();
-	$x->init_extension('DPMS');
+    my $x = X11::Protocol->new();
+    $x->init_extension('DPMS');
 
-	my $power_level = '';
-	while (1) {
-		my $old_pl = $power_level;
-		($power_level, undef) = $x->DPMSInfo();
-		my $stop;
+    my $power_level = '';
+    while (1) {
+        my $old_pl = $power_level;
+        ($power_level, undef) = $x->DPMSInfo();
+        my $stop;
 
-		if( $old_pl eq 'DPMSModeOn' && $power_level ne 'DPMSModeOn' ) {
-			$stop = $self->start->($self) if $self->start;
-		}
-		elsif ( $power_level eq 'DPMSModeOn' && $old_pl ne 'DPMSModeOn' ) {
-			$stop = $self->stop->($self) if $self->stop;
-		}
+        if( $old_pl eq 'DPMSModeOn' && $power_level ne 'DPMSModeOn' ) {
+            $stop = $self->start->($self) if $self->start;
+        }
+        elsif ( $power_level eq 'DPMSModeOn' && $old_pl ne 'DPMSModeOn' ) {
+            $stop = $self->stop->($self) if $self->stop;
+        }
 
-		last if $stop;
+        last if $stop;
 
-		sleep 60;
-	}
+        sleep 60;
+    }
 
-	return;
+    return;
 }
 
 1;
