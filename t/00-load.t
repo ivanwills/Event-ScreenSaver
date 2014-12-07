@@ -1,11 +1,14 @@
 #!perl -T
 
-use Test::More tests => 2 + 1;
-use Test::NoWarnings;
+use Test::More;
+use Test::Warnings;
+use English qw/ -no_match_vars /;
 
 BEGIN {
-	use_ok( 'Event::ScreenSaver' );
-	use_ok( 'Event::ScreenSaver::Unix' );
-}
+    use_ok( 'Event::ScreenSaver' );
+    use_ok( 'Event::ScreenSaver::Unix' );
+};
 
 diag( "Testing Event::ScreenSaver $Event::ScreenSaver::VERSION, Perl $], $^X" );
+BAIL_OUT "Currently only support linux" if $OSNAME ne 'linux';
+done_testing;
