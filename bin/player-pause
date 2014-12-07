@@ -15,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Event::ScreenSaver;
 
-our $VERSION = version->new('0.0.1');
+our $VERSION = version->new('0.0.3');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 my $ss;
 
@@ -156,7 +156,7 @@ player-pause - Pauses music players when the screen saver starts.
 
 =head1 VERSION
 
-This documentation refers to player-pause version 0.1.
+This documentation refers to player-pause version 0.0.3.
 
 =head1 SYNOPSIS
 
