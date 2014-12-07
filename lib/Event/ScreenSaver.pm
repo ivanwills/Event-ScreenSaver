@@ -11,7 +11,7 @@ use warnings;
 use version;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.0.4');
+our $VERSION = version->new('0.0.5');
 
 my %module = (
     linux   => 'Unix',
@@ -33,7 +33,7 @@ and stopping of the screen saver (Linux only at the moment)
 
 =head1 VERSION
 
-This documentation refers to Event::ScreenSaver version 0.0.4.
+This documentation refers to Event::ScreenSaver version 0.0.5.
 
 =head1 SYNOPSIS
 

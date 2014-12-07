@@ -14,7 +14,7 @@ use List::MoreUtils qw/any/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.0.4');
+our $VERSION = version->new('0.0.5');
 
 has start => (
     is  => 'rw',
@@ -120,7 +120,7 @@ monitoring code.
 
 =head1 VERSION
 
-This documentation refers to Event::ScreenSaver::Unix version 0.0.4.
+This documentation refers to Event::ScreenSaver::Unix version 0.0.5.
 
 =head1 SYNOPSIS
 

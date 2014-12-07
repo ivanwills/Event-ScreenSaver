@@ -1,6 +1,17 @@
 Revision history for Event-ScreenSaver
 
+0.0.5   2014-12-07
+        Updating for release of version 0.0.5 (Ivan Wills)
+        Updated dependencies (Ivan Wills)
+        Updated licence (Ivan Wills)
+        Removed generated files (Ivan Wills)
+        Updated skips (Ivan Wills)
+        Added missing files to test and cleaned up (Ivan Wills)
+        Cleaned up tabs (Ivan Wills)
+        Added bailout for non linux oses (Ivan Wills)
+
 0.0.4   2014-05-22
+        Changes for 0.0.4 release (Ivan Wills)
         Missing changes fron 0.0.3 (Ivan Wills)
         Updated files (Ivan Wills)
         Fixed abstracts to match spec per http://neilb.org/2014/02/19/compliant-abstract.html (Ivan Wills)
