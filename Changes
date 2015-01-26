@@ -1,5 +1,11 @@
 Revision history for Event-ScreenSaver
 
+0.0.6   2015-01-26
+        Updating for release of version 0.0.6
+        Updated License (Ivan Wills)
+        fixed license (Ivan Wills)
+        Merge branch 'master' of github.com:ivanwills/Event-ScreenSaver (Ivan Wills)
+
 0.0.5   2014-12-07
         Updating for release of version 0.0.5 (Ivan Wills)
         Updated dependencies (Ivan Wills)
