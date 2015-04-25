@@ -13,7 +13,6 @@ my $builder = Module::Build->new(
         'Module::Build'    => 0,
         'Moose'            => 0,
         'Pod::Usage'       => 0,
-        'Test::More'       => 0,
         'Test::NoWarnings' => 0,
         'version'          => 0,
         'warnings'         => 0,
@@ -22,7 +21,7 @@ my $builder = Module::Build->new(
         'Module::Build' => 0.38,
     },
     build_requires => {
-        'Test::More'     => 0,
+        'Test::More'     => '0.88',
         'Test::Warnings' => 0,
     },
     add_to_cleanup     => [ 'Event-ScreenSaver-*' ],
